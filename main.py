@@ -1,13 +1,15 @@
-import numpy as np
+import time
 
-
-def main():
-    print("Back to Python")
-
-    arr = np.array([1, 2, 3, 4, 5])
-    for x in arr:
-        print(x)
-
+from SystemMonitor import SystemMonitor
 
 if __name__ == "__main__":
-    main()
+    system_monitor = SystemMonitor()
+    system_monitor.start()
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        system_monitor.stop()
