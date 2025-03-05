@@ -16,7 +16,6 @@ class CPULoadMetrics:
 class CPULoadMonitor(BaseMonitor[CPULoadMetrics]):
     def __init__(self) -> None:
         super().__init__()
-        self.psutil_interval: float = 0.5
 
     def _init_current_metrics(self) -> CPULoadMetrics:
         return CPULoadMetrics(timestamp=datetime.now(),
