@@ -37,7 +37,7 @@ class MemoryMonitor(BaseMonitor[MemoryMetrics]):
         self.current_metrics.timestamp = datetime.now()
         self.current_metrics.mem_used_percent = mem.percent
         self.current_metrics.mem_used_gib = bytes_to_gib(mem.used)
-        self.current_metrics.mem_free_gib = bytes_to_gib(mem.free)
+        self.current_metrics.mem_free_gib = bytes_to_gib(mem.available)
 
         swap = psutil.swap_memory()
         self.current_metrics.timestamp = datetime.now()
