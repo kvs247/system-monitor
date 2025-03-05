@@ -1,6 +1,6 @@
 import time
 
-from SystemMonitor import SystemMonitor
+from system_monitor import SystemMonitor
 
 if __name__ == "__main__":
     system_monitor = SystemMonitor()

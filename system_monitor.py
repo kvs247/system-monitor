@@ -3,16 +3,16 @@ import threading
 
 from threading import Thread
 from typing import Optional
-from Monitor.CPUMonitor import CPUMonitor
+from monitor.cpu_load_monitor import CPULoadMonitor
 
 
 class SystemMonitor:
-    def __init__(self):
+    def __init__(self) -> None:
         self.refresh_interval_s: float = 1.0
 
         self._running: bool = False
         self._thread: Optional[Thread] = None
-        self._cpu_monitor = CPUMonitor()
+        self._cpu_monitor = CPULoadMonitor()
 
     def start(self) -> None:
         self._running = True
@@ -30,6 +30,7 @@ class SystemMonitor:
 
     def _run(self) -> None:
         while self._running:
-            print(f"CPU usage: {self._cpu_monitor.cpu_percent}%")
+            print(
+                f"CPU usage: {self._cpu_monitor.current_metrics.usage_total}%")
 
             time.sleep(self.refresh_interval_s)
