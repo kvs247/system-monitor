@@ -4,19 +4,12 @@ import threading
 import time
 
 from collections import deque
-from dataclasses import dataclass
-from dtypes import SystemMetric
+from dtypes import SystemMetric, MetricsDataPoint
 from monitor.base import BaseMonitor
 from monitor.cpu_load_monitor import CPULoadMetrics
 from monitor.memory_monitor import MemoryMetrics
 from threading import Thread
 from typing import Optional
-
-
-@dataclass(frozen=True)
-class MetricsDataPoint:
-    cpu: CPULoadMetrics
-    mem: MemoryMetrics
 
 
 class SystemMonitor:

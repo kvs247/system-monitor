@@ -21,4 +21,10 @@ class MemoryMetrics:
     swap_free_gib: float
 
 
+@dataclass(frozen=True)
+class MetricsDataPoint:
+    cpu: CPULoadMetrics
+    mem: MemoryMetrics
+
+
 SystemMetric = Union[CPULoadMetrics, MemoryMetrics]
