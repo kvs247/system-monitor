@@ -17,6 +17,7 @@ mccabe==0.7.0
 mypy==1.15.0
 mypy-extensions==1.0.0
 numpy==2.2.3
+nvidia-ml-py==12.570.86
 packaging==24.2
 parso==0.8.4
 pillow==11.1.0

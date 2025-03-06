@@ -22,6 +22,7 @@ class Line:
 class PlotLines:
     cpu_usage_total: Line
     mem_used_percent: Line
+    gpu_utilization: Line
 
 
 class Plotter:
@@ -43,15 +44,21 @@ class Plotter:
         self._lines = PlotLines(
             cpu_usage_total=Line(
                 line=self._ax.plot([], [])[0],
-                update_data=lambda x: x.cpu.usage_total,
+                update_data=lambda x: x.cpu.usage_total_percent,
                 label="CPU Usage",
                 display=True,
             ),
             mem_used_percent=Line(
                 line=self._ax.plot([], [])[0],
-                update_data=lambda x: x.mem.mem_used_percent,
+                update_data=lambda x: x.memory.memory_used_percent,
                 label="Memory Usage",
                 display=True,
+            ),
+            gpu_utilization=Line(
+                line=self._ax.plot([], [])[0],
+                update_data=lambda x: x.gpu.gpu_utilization_percent,
+                label="GPU Utilization",
+                display=True
             ),
         )
         self._set_line_labels()
@@ -65,18 +72,6 @@ class Plotter:
         metrics_data = self._data_producer.get_metrics_data()
         if not metrics_data:
             return [getattr(self._lines, f.name).line for f in fields(self._lines)]
-
-        cpu_usage_toal: list[float] = list(
-            map(lambda x: x.cpu.usage_total, metrics_data))
-        if len(cpu_usage_toal) < config.NUM_DATA_POINTS:
-            fill_length = config.NUM_DATA_POINTS - len(cpu_usage_toal)
-            cpu_usage_toal += [np.nan] * fill_length
-
-        mem_usage_percent: list[float] = list(
-            map(lambda x: x.mem.mem_used_percent, metrics_data))
-        if len(mem_usage_percent) < config.NUM_DATA_POINTS:
-            fill_length = config.NUM_DATA_POINTS - len(mem_usage_percent)
-            mem_usage_percent += [np.nan] * fill_length
 
         for f in fields(self._lines):
             attr: Line = getattr(self._lines, f.name)
