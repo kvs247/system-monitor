@@ -1,7 +1,7 @@
-from system_monitor import SystemMonitor
 from monitor.cpu_load_monitor import CPULoadMonitor
 from monitor.memory_monitor import MemoryMonitor
 from plotter import Plotter
+from system_monitor import SystemMonitor
 
 if __name__ == "__main__":
     system_monitor = SystemMonitor()

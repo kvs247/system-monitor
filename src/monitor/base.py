@@ -2,9 +2,9 @@ import threading
 import time
 
 from abc import abstractmethod, ABC
-from typing import Optional, TypeVar, Generic
-from threading import Thread
 from dtypes import SystemMetric
+from threading import Thread
+from typing import Optional, TypeVar, Generic
 
 T = TypeVar("T", bound=SystemMetric, covariant=True)
 

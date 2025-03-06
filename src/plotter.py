@@ -1,10 +1,10 @@
-import config
+import config as config
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 
-from system_monitor import SystemMonitor
 from matplotlib.lines import Line2D
+from system_monitor import SystemMonitor
 
 
 class Plotter:

@@ -1,9 +1,9 @@
-import psutil
 import numpy as np
+import psutil
 
 from datetime import datetime
-from monitor.base import BaseMonitor
 from dtypes import CPULoadMetrics
+from monitor.base import BaseMonitor
 
 
 class CPULoadMonitor(BaseMonitor[CPULoadMetrics]):

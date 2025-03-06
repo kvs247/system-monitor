@@ -1,9 +1,9 @@
 import psutil
 
 from datetime import datetime
+from dtypes import MemoryMetrics
 from monitor.base import BaseMonitor
 from utils import bytes_to_gib
-from dtypes import MemoryMetrics
 
 
 class MemoryMonitor(BaseMonitor[MemoryMetrics]):

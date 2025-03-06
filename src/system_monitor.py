@@ -1,16 +1,16 @@
-import config
+import config as config
 import copy
 import threading
 import time
 
 from collections import deque
 from dataclasses import dataclass
+from dtypes import SystemMetric
 from monitor.base import BaseMonitor
 from monitor.cpu_load_monitor import CPULoadMetrics
 from monitor.memory_monitor import MemoryMetrics
 from threading import Thread
 from typing import Optional
-from dtypes import SystemMetric
 
 
 @dataclass(frozen=True)
