@@ -4,8 +4,9 @@ import time
 from abc import abstractmethod, ABC
 from typing import Optional, TypeVar, Generic
 from threading import Thread
+from dtypes import SystemMetric
 
-T = TypeVar("T")
+T = TypeVar("T", bound=SystemMetric, covariant=True)
 
 
 class BaseMonitor(Generic[T], ABC):

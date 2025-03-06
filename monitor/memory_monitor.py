@@ -1,20 +1,9 @@
 import psutil
 
 from datetime import datetime
-from dataclasses import dataclass
 from monitor.base import BaseMonitor
 from utils import bytes_to_gib
-
-
-@dataclass
-class MemoryMetrics:
-    timestamp: datetime
-    mem_used_percent: float
-    mem_used_gib: float
-    mem_free_gib: float
-    swap_used_percent: float
-    swap_used_gib: float
-    swap_free_gib: float
+from dtypes import MemoryMetrics
 
 
 class MemoryMonitor(BaseMonitor[MemoryMetrics]):

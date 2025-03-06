@@ -2,15 +2,8 @@ import psutil
 import numpy as np
 
 from datetime import datetime
-from dataclasses import dataclass
 from monitor.base import BaseMonitor
-
-
-@dataclass
-class CPULoadMetrics:
-    timestamp: datetime
-    usage_total: float
-    usage_percpu: list[float]
+from dtypes import CPULoadMetrics
 
 
 class CPULoadMonitor(BaseMonitor[CPULoadMetrics]):
