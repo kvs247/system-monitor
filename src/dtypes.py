@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Union
+from matplotlib.lines import Line2D
+from typing import Union, Callable
 
 
 @dataclass
@@ -41,3 +42,18 @@ class MetricsDataPoint:
 
 
 SystemMetric = Union[CPULoadMetrics, MemoryMetrics, GPUMetrics]
+
+
+@dataclass
+class Line:
+    line: Line2D
+    update_data: Callable[[MetricsDataPoint], float]
+    label: str
+    display: bool
+
+
+@dataclass
+class PlotLines:
+    cpu_usage_total: Line
+    mem_used_percent: Line
+    gpu_utilization: Line

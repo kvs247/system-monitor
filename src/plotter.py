@@ -1,28 +1,16 @@
-import config as config
+import config
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 
-from dataclasses import dataclass, fields
-from dtypes import MetricsDataPoint
+from dataclasses import fields
+from dtypes import PlotLines, Line
+from matplotlib.backend_bases import Event
 from matplotlib.lines import Line2D
+from matplotlib.widgets import Button
+from settings_window import SettingsWindow
 from system_monitor import SystemMonitor
-from typing import Callable
-
-
-@dataclass
-class Line:
-    line: Line2D
-    update_data: Callable[[MetricsDataPoint], float]
-    label: str
-    display: bool
-
-
-@dataclass
-class PlotLines:
-    cpu_usage_total: Line
-    mem_used_percent: Line
-    gpu_utilization: Line
+from typing import Optional
 
 
 class Plotter:
@@ -35,6 +23,9 @@ class Plotter:
         self._ax.set_ylim(0, 100)
         self._ax.grid(True)
         self._x_data = np.arange(0, config.NUM_DATA_POINTS)
+
+        self._settings_window: Optional[SettingsWindow] = None
+        self._add_settings_button()
 
         self.animation = animation.FuncAnimation(
             self._fig, self._update_data, interval=config.PLOT_INTERVAL_S, blit=True
@@ -81,6 +72,20 @@ class Plotter:
             attr.line.set_data(self._x_data, data)
 
         return [getattr(self._lines, f.name).line for f in fields(self._lines)]
+
+    def _add_settings_button(self):
+        settings_ax = plt.axes((0.85, 0.01, 0.1, 0.05))
+        self._settings_button = Button(settings_ax, "Settings")
+        self._settings_button.on_clicked(self._handle_click_settings)
+
+    def _handle_click_settings(self, _: Event):
+        if self._settings_window is None:
+            self._settings_window = SettingsWindow(self._lines)
+            self._settings_window.show()
+        elif self._settings_window.is_hidden():
+            self._settings_window.show()
+        else:
+            self._settings_window.hide()
 
     def show(self) -> None:
         plt.title("System Metrics")

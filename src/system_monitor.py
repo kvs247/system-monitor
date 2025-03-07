@@ -49,19 +49,19 @@ class SystemMonitor:
             cpu_monitor: CPULoadMetrics = self._monitors[0].current_metrics  # type: ignore # nopep8
             mem_monitor: MemoryMetrics = self._monitors[1].current_metrics  # type: ignore # nopep8
             gpu_monitor: GPUMetrics = self._monitors[2].current_metrics  # type: ignore # nopep8
-            print(
-                f"{'CPU: ':{text_width}}{cpu_monitor.usage_total_percent:.1f}%\n"
+            # print(
+            #     f"{'CPU: ':{text_width}}{cpu_monitor.usage_total_percent:.1f}%\n"
 
-                f"{'RAM: ':{text_width}}{mem_monitor.memory_used_gib:.1f} GiB "
-                f"({mem_monitor.memory_used_percent:.1f}%), "
-                f"{mem_monitor.memory_free_gib:.1f} GiB free\n"
+            #     f"{'RAM: ':{text_width}}{mem_monitor.memory_used_gib:.1f} GiB "
+            #     f"({mem_monitor.memory_used_percent:.1f}%), "
+            #     f"{mem_monitor.memory_free_gib:.1f} GiB free\n"
 
-                f"{'SWAP: ':{text_width}}{mem_monitor.swap_used_gib:.1f} GiB "
-                f"({mem_monitor.swap_used_percent:.1f}%), "
-                f"{mem_monitor.swap_free_gib:.1f} GiB free\n"
+            #     f"{'SWAP: ':{text_width}}{mem_monitor.swap_used_gib:.1f} GiB "
+            #     f"({mem_monitor.swap_used_percent:.1f}%), "
+            #     f"{mem_monitor.swap_free_gib:.1f} GiB free\n"
 
-                f"{'GPU: ':{text_width}}{gpu_monitor.memory_occupancy_percent}"
-            )
+            #     f"{'GPU: ':{text_width}}{gpu_monitor.memory_occupancy_percent}"
+            # )
 
             data_point = MetricsDataPoint(
                 cpu=cpu_monitor,
