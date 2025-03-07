@@ -1,10 +1,13 @@
-from monitor.cpu_load_monitor import CPULoadMonitor
-from monitor.memory_monitor import MemoryMonitor
-from monitor.gpu_monitor import GPUMonitor
+from src.metrics_registry import MetricsRegistry
+from src.monitor.cpu_load_monitor import CPULoadMonitor
+from src.monitor.gpu_monitor import GPUMonitor
+from src.monitor.memory_monitor import MemoryMonitor
+from src.system_monitor import SystemMonitor
 from src.visualization.plotter import Plotter
-from system_monitor import SystemMonitor
 
 if __name__ == "__main__":
+    MetricsRegistry()
+
     system_monitor = SystemMonitor()
     system_monitor.add_monitor(CPULoadMonitor())
     system_monitor.add_monitor(MemoryMonitor())

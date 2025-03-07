@@ -1,59 +1,28 @@
+from collections import deque
 from dataclasses import dataclass
-from datetime import datetime
-from matplotlib.lines import Line2D
-from typing import Union, Callable
+from enum import Enum, auto
+
+
+class HardwareComponent(Enum):
+    CPU = "cpu"
+    GPU = "gpu"
+    MEMORY = "memory"
+
+
+class MetricUnit(Enum):
+    PERCENT = auto()
+    GIB = auto()
+    WATT = auto()
 
 
 @dataclass
-class CPULoadMetrics:
-    timestamp: datetime
-    usage_total_percent: float
-    usage_percpu_percent: list[float]
-
-
-@dataclass
-class MemoryMetrics:
-    timestamp: datetime
-    memory_used_percent: float
-    memory_used_gib: float
-    memory_free_gib: float
-    swap_used_percent: float
-    swap_used_gib: float
-    swap_free_gib: float
-
-
-@dataclass
-class GPUMetrics:
-    timestamp: datetime
-    memory_occupancy_percent: float
-    memory_used_gib: float
-    memory_free_gib: float
-    gpu_utilization_percent: float
-    memory_bandwidth_percent: float
-    temp_c: float
-    power_w: float
-
-
-@dataclass(frozen=True)
-class MetricsDataPoint:
-    cpu: CPULoadMetrics
-    memory: MemoryMetrics
-    gpu: GPUMetrics
-
-
-SystemMetric = Union[CPULoadMetrics, MemoryMetrics, GPUMetrics]
-
-
-@dataclass
-class Line:
-    line: Line2D
-    update_data: Callable[[MetricsDataPoint], float]
+class Metric:
     label: str
+    hardware_component: HardwareComponent
+    unit: MetricUnit
+    color: str
     display: bool
+    data: deque[float]
 
-
-@dataclass
-class PlotLines:
-    cpu_usage_total: Line
-    mem_used_percent: Line
-    gpu_utilization: Line
+    def update(self, value: float) -> None:
+        self.data.append(value)

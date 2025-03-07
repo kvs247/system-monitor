@@ -1,21 +1,23 @@
-import config
+import src.config as config
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 
 from dataclasses import fields
-from dtypes import PlotLines, Line
 from matplotlib.backend_bases import Event
 from matplotlib.lines import Line2D
 from matplotlib.widgets import Button
+from src.dtypes import Metric
+from src.metrics_registry import MetricsRegistry
 from src.visualization.settings_window import SettingsWindow
-from system_monitor import SystemMonitor
+from src.system_monitor import SystemMonitor
 from typing import Optional
 
 
 class Plotter:
     def __init__(self, data_producer: SystemMonitor) -> None:
         self._data_producer = data_producer
+        self._registry = MetricsRegistry()
 
         self._fig, self._ax = plt.subplots()
         self._init_plot_lines()
@@ -32,49 +34,32 @@ class Plotter:
         )
 
     def _init_plot_lines(self):
-        self._lines = PlotLines(
-            cpu_usage_total=Line(
-                line=self._ax.plot([], [])[0],
-                update_data=lambda x: x.cpu.usage_total_percent,
-                label="CPU Usage",
-                display=False,
-            ),
-            mem_used_percent=Line(
-                line=self._ax.plot([], [])[0],
-                update_data=lambda x: x.memory.memory_used_percent,
-                label="Memory Usage",
-                display=True,
-            ),
-            gpu_utilization=Line(
-                line=self._ax.plot([], [])[0],
-                update_data=lambda x: x.gpu.gpu_utilization_percent,
-                label="GPU Utilization",
-                display=True
-            ),
-        )
-        self._set_line_labels()
-
-    def _set_line_labels(self):
-        for f in fields(self._lines):
-            attr: Line = getattr(self._lines, f.name)
-            attr.line.set_label(attr.label)
+        self._lines: list[Line2D] = []
+        for f in fields(self._registry.get_system_metrics()):
+            self._lines.append(self._ax.plot([], [])[0])
 
     def _update_data(self, _: None) -> list[Line2D]:
-        metrics_data = self._data_producer.get_metrics_data()
-        if not metrics_data:
-            return [getattr(self._lines, f.name).line for f in fields(self._lines)]
-
-        for f in fields(self._lines):
-            attr: Line = getattr(self._lines, f.name)
+        system_metrics = self._registry.get_system_metrics()
+        i: int = 0
+        for f in fields(system_metrics):
+            attr: Metric = getattr(system_metrics, f.name)
             if attr.display:
-                data: list[float] = list(map(attr.update_data, metrics_data))
+                data = attr.data
                 fill_length = config.NUM_DATA_POINTS - len(data)
                 data += [np.nan] * fill_length
-                attr.line.set_data(self._x_data, data)
+                self._lines[i].set_data(self._x_data, data)
             else:
-                attr.line.set_data([], [])
+                self._lines[i].set_data([], [])
+            i += 1
 
-        return [getattr(self._lines, f.name).line for f in fields(self._lines)]
+        return self._lines
+
+    def _get_labels(self) -> list[str]:
+        labels: list[str] = []
+        for f in fields(self._registry.get_system_metrics()):
+            attr: Metric = getattr(self._registry.get_system_metrics(), f.name)
+            labels.append(attr.label)
+        return labels
 
     def _add_settings_button(self):
         settings_ax = plt.axes((0.85, 0.01, 0.1, 0.05))
@@ -92,7 +77,7 @@ class Plotter:
 
     def show(self) -> None:
         plt.title("System Metrics")
-        self._ax.legend()
+        self._ax.legend(self._get_labels())
         plt.show()
 
     def close(self) -> None:

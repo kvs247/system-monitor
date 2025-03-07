@@ -1,11 +1,13 @@
 import tkinter as tk
 
-from dtypes import PlotLines, Line
 from dataclasses import fields
+from matplotlib.lines import Line2D
+from src.dtypes import Metric
+from src.metrics_registry import MetricsRegistry
 
 
 class SettingsWindow:
-    def __init__(self, plot_lines: PlotLines):
+    def __init__(self, plot_lines: list[Line2D]):
         self._root = tk.Tk()
         self._root.title("Settings")
         self._root.minsize(200, 200)
@@ -14,9 +16,10 @@ class SettingsWindow:
 
         self._hidden = False
         self._plot_lines = plot_lines
+        self._metrics_registry = MetricsRegistry()
 
-        for f in fields(plot_lines):
-            attr: Line = getattr(plot_lines, f.name)
+        for f in fields(self._metrics_registry.get_system_metrics()):
+            attr: Metric = getattr(plot_lines, f.name)
             check_button = tk.Checkbutton(
                 self._root,
                 text=f.name,
@@ -41,5 +44,5 @@ class SettingsWindow:
         self._hidden = True
         self._root.withdraw()
 
-    def change_field_active(self, attr: Line) -> None:
+    def change_field_active(self, attr: Metric) -> None:
         attr.display = not attr.display

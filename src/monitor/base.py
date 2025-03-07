@@ -2,24 +2,18 @@ import threading
 import time
 
 from abc import abstractmethod, ABC
-from dtypes import SystemMetric
+from src.metrics_registry import MetricsRegistry
 from threading import Thread
-from typing import Optional, TypeVar, Generic
-
-T = TypeVar("T", bound=SystemMetric, covariant=True)
+from typing import Optional
 
 
-class BaseMonitor(Generic[T], ABC):
+class BaseMonitor(ABC):
     def __init__(self, collection_interval_s: float = 1.0):
         self.collection_interval_s = collection_interval_s
-        self.current_metrics: T = self._init_current_metrics()
+        self.system_metrics = MetricsRegistry().get_system_metrics()
 
         self._running: bool = False
         self._thread: Optional[Thread] = None
-
-    @abstractmethod
-    def _init_current_metrics(self) -> T:
-        pass
 
     def _collection_loop(self) -> None:
         while self._running:
