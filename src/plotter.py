@@ -37,7 +37,7 @@ class Plotter:
                 line=self._ax.plot([], [])[0],
                 update_data=lambda x: x.cpu.usage_total_percent,
                 label="CPU Usage",
-                display=True,
+                display=False,
             ),
             mem_used_percent=Line(
                 line=self._ax.plot([], [])[0],
@@ -66,10 +66,13 @@ class Plotter:
 
         for f in fields(self._lines):
             attr: Line = getattr(self._lines, f.name)
-            data: list[float] = list(map(attr.update_data, metrics_data))
-            fill_length = config.NUM_DATA_POINTS - len(data)
-            data += [np.nan] * fill_length
-            attr.line.set_data(self._x_data, data)
+            if attr.display:
+                data: list[float] = list(map(attr.update_data, metrics_data))
+                fill_length = config.NUM_DATA_POINTS - len(data)
+                data += [np.nan] * fill_length
+                attr.line.set_data(self._x_data, data)
+            else:
+                attr.line.set_data([], [])
 
         return [getattr(self._lines, f.name).line for f in fields(self._lines)]
 
