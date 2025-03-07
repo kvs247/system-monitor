@@ -10,6 +10,7 @@ fonttools==4.56.0
 isort==6.0.1
 jedi==0.19.2
 jedi-language-server==0.43.1
+keyboard==0.13.5
 kiwisolver==1.4.8
 lsprotocol==2023.0.1
 matplotlib==3.10.1
@@ -29,8 +30,10 @@ pygls==1.3.1
 pylint==3.3.4
 pyparsing==3.2.1
 python-dateutil==2.9.0.post0
+setuptools==75.8.2
 six==1.17.0
 snowballstemmer==2.2.0
+-e git+ssh://git@github.com/kvs247/system-monitor.git@3443da12f6ed2801006e7b954f897ec37cfd6d6c#egg=system_monitor
 tomlkit==0.13.2
 types-psutil==7.0.0.20250218
 typing_extensions==4.12.2

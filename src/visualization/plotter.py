@@ -8,7 +8,7 @@ from dtypes import PlotLines, Line
 from matplotlib.backend_bases import Event
 from matplotlib.lines import Line2D
 from matplotlib.widgets import Button
-from settings_window import SettingsWindow
+from src.visualization.settings_window import SettingsWindow
 from system_monitor import SystemMonitor
 from typing import Optional
 
