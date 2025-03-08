@@ -10,16 +10,24 @@ from src.dtypes import Metric, HardwareComponent, MetricUnit
 class SystemMetrics:
     # CPU
     cpu_usage_percent: Metric
+    cpu_temp_avg_c: Metric
+    cpu_temp_max_c: Metric
 
     # GPU
     gpu_usage_percent: Metric
     gpu_temp_c: Metric
+    gpu_memory_usage_percent: Metric
+    gpu_memory_bandwidth: Metric
+    gpu_memory_used_gib: Metric
+    gpu_memory_free_gib: Metric
 
     # Memory
     memory_usage_percent: Metric
     memory_used_gib: Metric
     memory_free_gib: Metric
-    swap_usage_gib: Metric
+    swap_usage_percent: Metric
+    swap_used_gib: Metric
+    swap_free_gib: Metric
 
 
 class MetricsRegistry:
@@ -45,6 +53,22 @@ class MetricsRegistry:
                 display=True,
                 data=make_empty_deque(),
             ),
+            cpu_temp_avg_c=Metric(
+                label="Average CPU Temperature",
+                hardware_component=HardwareComponent.CPU,
+                unit=MetricUnit.CELSCIUS,
+                color="red",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            cpu_temp_max_c=Metric(
+                label="Maximum CPU Temperature",
+                hardware_component=HardwareComponent.CPU,
+                unit=MetricUnit.CELSCIUS,
+                color="red",
+                display=True,
+                data=make_empty_deque(),
+            ),
 
             # GPU
             gpu_usage_percent=Metric(
@@ -56,9 +80,41 @@ class MetricsRegistry:
                 data=make_empty_deque(),
             ),
             gpu_temp_c=Metric(
-                label="GPU Temp",
+                label="GPU Temperature",
                 hardware_component=HardwareComponent.GPU,
                 unit=MetricUnit.CELSCIUS,
+                color="blue",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            gpu_memory_usage_percent=Metric(
+                label="GPU Memory Utilization",
+                hardware_component=HardwareComponent.GPU,
+                unit=MetricUnit.PERCENT,
+                color="blue",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            gpu_memory_bandwidth=Metric(
+                label="GPU Memory Bandwidth",
+                hardware_component=HardwareComponent.GPU,
+                unit=MetricUnit.PERCENT,
+                color="",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            gpu_memory_used_gib=Metric(
+                label="Used GPU Memory",
+                hardware_component=HardwareComponent.GPU,
+                unit=MetricUnit.GIB,
+                color="blue",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            gpu_memory_free_gib=Metric(
+                label="Free GPU Memory",
+                hardware_component=HardwareComponent.GPU,
+                unit=MetricUnit.GIB,
                 color="blue",
                 display=True,
                 data=make_empty_deque(),
@@ -67,7 +123,7 @@ class MetricsRegistry:
 
             # Memory
             memory_usage_percent=Metric(
-                label="Memory Usage (%)",
+                label="Memory Usage",
                 hardware_component=HardwareComponent.MEMORY,
                 unit=MetricUnit.PERCENT,
                 color="blue",
@@ -75,7 +131,7 @@ class MetricsRegistry:
                 data=make_empty_deque(),
             ),
             memory_used_gib=Metric(
-                label="Used Memory (GiB)",
+                label="Used Memory",
                 hardware_component=HardwareComponent.MEMORY,
                 unit=MetricUnit.GIB,
                 color="red",
@@ -83,15 +139,31 @@ class MetricsRegistry:
                 data=make_empty_deque(),
             ),
             memory_free_gib=Metric(
-                label="Free Memory (GiB)",
+                label="Free Memory",
                 hardware_component=HardwareComponent.MEMORY,
                 unit=MetricUnit.GIB,
                 color="red",
                 display=True,
                 data=make_empty_deque(),
             ),
-            swap_usage_gib=Metric(
-                label="Swap Usage",
+            swap_usage_percent=Metric(
+                label="Swap Utiliazation",
+                hardware_component=HardwareComponent.MEMORY,
+                unit=MetricUnit.PERCENT,
+                color="red",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            swap_used_gib=Metric(
+                label="Used Swap",
+                hardware_component=HardwareComponent.MEMORY,
+                unit=MetricUnit.GIB,
+                color="red",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            swap_free_gib=Metric(
+                label="Free Swap",
                 hardware_component=HardwareComponent.MEMORY,
                 unit=MetricUnit.GIB,
                 color="red",

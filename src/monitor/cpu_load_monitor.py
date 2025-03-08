@@ -9,12 +9,16 @@ class CPULoadMonitor(BaseMonitor):
         super().__init__()
 
     def _collect(self) -> None:
-        result: list[float] = psutil.cpu_percent(interval=None, percpu=True)
-
-        # self.current_metrics.timestamp = datetime.now()
-        # self.current_metrics.usage_total_percent = np.average(
-        #     result).astype(float)
-        # self.current_metrics.usage_percpu_percent = result
-
+        cpu_percent: list[float] = psutil.cpu_percent(
+            interval=None, percpu=True)
         self.system_metrics.cpu_usage_percent.update(
-            np.average(result).astype(float))
+            np.average(cpu_percent).astype(float))
+
+        cpu_temp = psutil.sensors_temperatures()
+        temps = cpu_temp["coretemp"]
+        current_temps = [t.current for t in temps]
+
+        self.system_metrics.cpu_temp_avg_c.update(
+            np.average(current_temps).astype(float))
+        self.system_metrics.cpu_temp_max_c.update(
+            np.max(current_temps).astype(float))

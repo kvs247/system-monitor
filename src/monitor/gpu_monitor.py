@@ -15,28 +15,20 @@ class GPUMonitor(BaseMonitor):
         for i in range(self._device_count):
             handle = pynvml.nvmlDeviceGetHandleByIndex(i)
 
-            # name = pynvml.nvmlDeviceGetName(handle)
-            # self.current_metrics.timestamp = datetime.now()
-
-            # memory_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
-            # self.current_metrics.memory_used_gib = bytes_to_gib(
-            #     float(memory_info.used))
-            # self.current_metrics.memory_free_gib = bytes_to_gib(
-            #     float(memory_info.free))
-            # self.current_metrics.memory_occupancy_percent = float(
-            #     memory_info.used) / float(memory_info.total) * 100
+            memory_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+            self.system_metrics.gpu_memory_used_gib.update(
+                bytes_to_gib(float(memory_info.used)))
+            self.system_metrics.gpu_memory_free_gib.update(
+                bytes_to_gib(float(memory_info.free)))
+            self.system_metrics.gpu_memory_usage_percent.update(
+                float(memory_info.used) / float(memory_info.total) * 100)
+            self.system_metrics.gpu_memory_usage_percent
 
             util_rates = pynvml.nvmlDeviceGetUtilizationRates(handle)
-            # self.current_metrics.gpu_utilization_percent = float(
-            #     util_rates.gpu)
-            # self.current_metrics.memory_bandwidth_percent = float(
-            #     util_rates.memory)
+            self.system_metrics.gpu_usage_percent.update(float(util_rates.gpu))
+            self.system_metrics.gpu_memory_bandwidth.update(
+                float(util_rates.memory))
 
             temp = pynvml.nvmlDeviceGetTemperature(
                 handle, pynvml.NVML_TEMPERATURE_GPU)
             self.system_metrics.gpu_temp_c.update(float(temp))
-
-            # power = pynvml. nvmlDeviceGetPowerUsage(handle) / 1000.0  # mW to W
-            # self.current_metrics.power_w = float(power)
-
-            self.system_metrics.gpu_usage_percent.update(float(util_rates.gpu))
