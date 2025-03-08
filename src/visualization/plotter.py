@@ -7,11 +7,15 @@ from dataclasses import fields
 from matplotlib.backend_bases import Event
 from matplotlib.lines import Line2D
 from matplotlib.widgets import Button
-from src.dtypes import Metric
+from src.dtypes import Metric, MetricUnit
 from src.metrics_registry import MetricsRegistry
 from src.visualization.settings_window import SettingsWindow
 from src.system_monitor import SystemMonitor
 from typing import Optional
+from utils import get_metric_unit_ylim
+
+BACKGROUND_COLOR = "#333333"
+WHITE = "#DDDDDD"
 
 
 class Plotter:
@@ -19,11 +23,22 @@ class Plotter:
         self._data_producer = data_producer
         self._registry = MetricsRegistry()
 
-        self._fig, self._ax = plt.subplots()
+        self._num_unit_types = len(MetricUnit)
+        self._fig, self._axes = plt.subplots(self._num_unit_types, 1)
+        self._fig.set_facecolor(BACKGROUND_COLOR)
+
         self._init_plot_lines()
-        self._ax.set_xlim(0, config.NUM_DATA_POINTS)
-        self._ax.set_ylim(0, 100)
-        self._ax.grid(True)
+
+        for i in range(self._num_unit_types):
+            self._axes[i].set_facecolor(BACKGROUND_COLOR)
+            self._axes[i].set_xlim(0, config.NUM_DATA_POINTS)
+            self._axes[i].set_ylim(0, get_metric_unit_ylim(MetricUnit(i + 1)))
+            self._axes[i].grid(axis="y", color=WHITE, zorder=0, alpha=0.5)
+
+            for spine in self._axes[i].spines.values():
+                spine.set_color(WHITE)
+                spine.set_zorder(0)
+
         self._x_data = np.arange(0, config.NUM_DATA_POINTS)
 
         self._settings_window: Optional[SettingsWindow] = None
@@ -36,7 +51,9 @@ class Plotter:
     def _init_plot_lines(self):
         self._lines: list[Line2D] = []
         for f in fields(self._registry.get_system_metrics()):
-            self._lines.append(self._ax.plot([], [])[0])
+            attr: Metric = getattr(self._registry.get_system_metrics(), f.name)
+            plot_index = attr.unit.value - 1
+            self._lines.append(self._axes[plot_index].plot([], [])[0])
 
     def _update_data(self, _: None) -> list[Line2D]:
         system_metrics = self._registry.get_system_metrics()
@@ -54,11 +71,12 @@ class Plotter:
 
         return self._lines
 
-    def _get_labels(self) -> list[str]:
-        labels: list[str] = []
+    def _get_labels(self) -> list[list[str]]:
+        labels: list[list[str]] = [[] for _ in range(self._num_unit_types)]
         for f in fields(self._registry.get_system_metrics()):
             attr: Metric = getattr(self._registry.get_system_metrics(), f.name)
-            labels.append(attr.label)
+            unit_index = attr.unit.value - 1
+            labels[unit_index].append(attr.label)
         return labels
 
     def _add_settings_button(self):
@@ -77,7 +95,9 @@ class Plotter:
 
     def show(self) -> None:
         plt.title("System Metrics")
-        self._ax.legend(self._get_labels())
+        labels = self._get_labels()
+        for i in range(self._num_unit_types):
+            self._axes[i].legend(labels[i], loc="upper left")
         plt.show()
 
     def close(self) -> None:

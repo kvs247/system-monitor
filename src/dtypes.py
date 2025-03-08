@@ -12,7 +12,7 @@ class HardwareComponent(Enum):
 class MetricUnit(Enum):
     PERCENT = auto()
     GIB = auto()
-    WATT = auto()
+    CELSCIUS = auto()
 
 
 @dataclass

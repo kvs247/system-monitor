@@ -32,9 +32,9 @@ class GPUMonitor(BaseMonitor):
             # self.current_metrics.memory_bandwidth_percent = float(
             #     util_rates.memory)
 
-            # temp = pynvml.nvmlDeviceGetTemperature(
-            #     handle, pynvml.NVML_TEMPERATURE_GPU)
-            # self.current_metrics.temp_c = float(temp)
+            temp = pynvml.nvmlDeviceGetTemperature(
+                handle, pynvml.NVML_TEMPERATURE_GPU)
+            self.system_metrics.gpu_temp_c.update(float(temp))
 
             # power = pynvml. nvmlDeviceGetPowerUsage(handle) / 1000.0  # mW to W
             # self.current_metrics.power_w = float(power)

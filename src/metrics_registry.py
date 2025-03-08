@@ -13,9 +13,13 @@ class SystemMetrics:
 
     # GPU
     gpu_usage_percent: Metric
+    gpu_temp_c: Metric
 
     # Memory
     memory_usage_percent: Metric
+    memory_used_gib: Metric
+    memory_free_gib: Metric
+    swap_usage_gib: Metric
 
 
 class MetricsRegistry:
@@ -51,14 +55,46 @@ class MetricsRegistry:
                 display=True,
                 data=make_empty_deque(),
             ),
+            gpu_temp_c=Metric(
+                label="GPU Temp",
+                hardware_component=HardwareComponent.GPU,
+                unit=MetricUnit.CELSCIUS,
+                color="blue",
+                display=True,
+                data=make_empty_deque(),
+            ),
 
 
             # Memory
             memory_usage_percent=Metric(
-                label="Memory Usage",
+                label="Memory Usage (%)",
                 hardware_component=HardwareComponent.MEMORY,
                 unit=MetricUnit.PERCENT,
                 color="blue",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            memory_used_gib=Metric(
+                label="Used Memory (GiB)",
+                hardware_component=HardwareComponent.MEMORY,
+                unit=MetricUnit.GIB,
+                color="red",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            memory_free_gib=Metric(
+                label="Free Memory (GiB)",
+                hardware_component=HardwareComponent.MEMORY,
+                unit=MetricUnit.GIB,
+                color="red",
+                display=True,
+                data=make_empty_deque(),
+            ),
+            swap_usage_gib=Metric(
+                label="Swap Usage",
+                hardware_component=HardwareComponent.MEMORY,
+                unit=MetricUnit.GIB,
+                color="red",
                 display=True,
                 data=make_empty_deque(),
             ),

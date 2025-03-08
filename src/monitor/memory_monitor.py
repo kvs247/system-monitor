@@ -18,7 +18,9 @@ class MemoryMonitor(BaseMonitor):
         swap = psutil.swap_memory()
         # self.current_metrics.timestamp = datetime.now()
         # self.current_metrics.swap_used_percent = swap.percent
-        # self.current_metrics.swap_used_gib = bytes_to_gib(swap.used)
+        self.system_metrics.swap_usage_gib.update(bytes_to_gib(swap.used))
         # self.current_metrics.swap_free_gib = bytes_to_gib(swap.free)
 
         self.system_metrics.memory_usage_percent.update(mem.percent)
+        self.system_metrics.memory_used_gib.update(bytes_to_gib(mem.used))
+        self.system_metrics.memory_free_gib.update(bytes_to_gib(mem.free))
