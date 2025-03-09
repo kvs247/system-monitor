@@ -2,6 +2,7 @@ import src.config as config
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
 
 from dataclasses import fields
 from matplotlib.backend_bases import Event
@@ -50,7 +51,6 @@ class Plotter:
                 self._axes[i].set_xlabel("s", color=WHITE)
                 self._axes[i].set_xticks(*make_xticks(11))
             else:
-                # self._axes[i].set_xlabel()
                 self._axes[i].set_xticks([])
 
             for spine in self._axes[i].spines.values():
@@ -60,7 +60,7 @@ class Plotter:
         self._x_data = np.arange(0, config.NUM_DATA_POINTS)
 
         self._settings_window: Optional[SettingsWindow] = None
-        # self._add_settings_button()
+        self._add_settings_button()
 
         self.animation = animation.FuncAnimation(
             self._fig, self._update_data, interval=config.PLOT_INTERVAL_S, blit=True
@@ -98,8 +98,18 @@ class Plotter:
         return labels
 
     def _add_settings_button(self):
-        settings_ax = plt.axes((0.925, 0.925, 0.05, 0.05))
-        self._settings_button = Button(settings_ax, "Config")
+        settings_ax = plt.axes((0.9625, 0.95, 0.05, 0.05))
+        gear_img = Image.open("assets/gear.png")
+
+        settings_ax.set_facecolor("none")
+        settings_ax.patch.set_visible(False)
+
+        self._settings_button = Button(
+            settings_ax,
+            label="",
+            image=gear_img,
+        )
+
         self._settings_button.on_clicked(self._handle_click_settings)
 
     def _handle_click_settings(self, _: Event):

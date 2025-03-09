@@ -17,9 +17,11 @@ class SettingsWindow:
         self._hidden = False
         self._plot_lines = plot_lines
         self._metrics_registry = MetricsRegistry()
+        self._system_metrics = self._metrics_registry.get_system_metrics()
 
-        for f in fields(self._metrics_registry.get_system_metrics()):
-            attr: Metric = getattr(plot_lines, f.name)
+        for f in fields(self._system_metrics):
+            attr: Metric = getattr(
+                self._system_metrics, f.name)
             check_button = tk.Checkbutton(
                 self._root,
                 text=f.name,

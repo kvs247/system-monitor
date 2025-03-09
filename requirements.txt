@@ -33,7 +33,7 @@ python-dateutil==2.9.0.post0
 setuptools==75.8.2
 six==1.17.0
 snowballstemmer==2.2.0
--e git+ssh://git@github.com/kvs247/system-monitor.git@3443da12f6ed2801006e7b954f897ec37cfd6d6c#egg=system_monitor
+-e git+ssh://git@github.com/kvs247/system-monitor.git@53d5229047f5c734910b7e72b6823063fce61739#egg=system_monitor
 tomlkit==0.13.2
 types-psutil==7.0.0.20250218
 typing_extensions==4.12.2
