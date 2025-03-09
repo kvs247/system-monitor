@@ -1,7 +1,7 @@
 import pynvml  # type: ignore
 
 from src.monitor.base import BaseMonitor
-from utils import bytes_to_gib
+from src.utils import bytes_to_gib
 
 
 class GPUMonitor(BaseMonitor):

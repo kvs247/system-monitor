@@ -4,6 +4,7 @@ from dataclasses import fields
 from matplotlib.lines import Line2D
 from src.dtypes import Metric
 from src.metrics_registry import MetricsRegistry
+from typing import Callable
 
 
 class SettingsWindow:
@@ -20,22 +21,25 @@ class SettingsWindow:
         self._system_metrics = self._metrics_registry.get_system_metrics()
 
         for f in fields(self._system_metrics):
-            attr: Metric = getattr(
+            metric: Metric = getattr(
                 self._system_metrics, f.name)
             check_button = tk.Checkbutton(
                 self._root,
                 text=f.name,
-                command=lambda a=attr: self.change_field_active(a),
+                command=self._check_button_callback(metric)
             )
             check_button.pack()
 
-            if attr.display:
+            if metric.display:
                 check_button.select()
             else:
                 check_button.deselect()
 
     def is_hidden(self) -> bool:
         return self._hidden
+
+    def _check_button_callback(self, metric: Metric) -> Callable[[], None]:
+        return lambda: self.change_field_active(metric)
 
     def show(self) -> None:
         self._hidden = False

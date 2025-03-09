@@ -33,13 +33,13 @@ class SystemMetrics:
 class MetricsRegistry:
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls) -> "MetricsRegistry":
         if cls._instance is None:
             cls._instance = super(MetricsRegistry, cls).__new__(cls)
             cls._instance._initialize()
         return cls._instance
 
-    def _initialize(self):
+    def _initialize(self) -> None:
         def make_empty_deque() -> deque[float]:
             return deque([np.nan] * config.NUM_DATA_POINTS, maxlen=config.NUM_DATA_POINTS)
 
