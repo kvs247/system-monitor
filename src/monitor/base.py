@@ -2,7 +2,7 @@ import threading
 import time
 
 from abc import abstractmethod, ABC
-from src.metrics_registry import MetricsRegistry
+from src.metrics_registry.metrics_registry import MetricsRegistry
 from threading import Thread
 from typing import Optional
 

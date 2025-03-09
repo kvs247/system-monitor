@@ -3,8 +3,9 @@ import tkinter as tk
 from dataclasses import fields
 from matplotlib.lines import Line2D
 from src.dtypes import Metric
-from src.metrics_registry import MetricsRegistry
+from src.metrics_registry.metrics_registry import MetricsRegistry
 from typing import Callable
+from src.settings import Settings
 
 
 class SettingsWindow:
@@ -30,16 +31,26 @@ class SettingsWindow:
             )
             check_button.pack()
 
-            if metric.display:
+            if metric.config.display:
                 check_button.select()
             else:
                 check_button.deselect()
+
+        save_button = tk.Button(
+            self._root,
+            text="SAVE",
+            command=self._save_button_callback()
+        )
+        save_button.pack()
 
     def is_hidden(self) -> bool:
         return self._hidden
 
     def _check_button_callback(self, metric: Metric) -> Callable[[], None]:
         return lambda: self.change_field_active(metric)
+
+    def _save_button_callback(self):
+        return lambda: Settings().write_config_file()
 
     def show(self) -> None:
         self._hidden = False
@@ -51,4 +62,4 @@ class SettingsWindow:
         self._root.withdraw()
 
     def change_field_active(self, attr: Metric) -> None:
-        attr.display = not attr.display
+        attr.config.display = not attr.config.display

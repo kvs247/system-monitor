@@ -1,12 +1,14 @@
-from src.metrics_registry import MetricsRegistry
+from src.metrics_registry.metrics_registry import MetricsRegistry
 from src.monitor.cpu_load_monitor import CPULoadMonitor
 from src.monitor.gpu_monitor import GPUMonitor
 from src.monitor.memory_monitor import MemoryMonitor
+from src.settings import Settings
 from src.system_monitor import SystemMonitor
 from src.visualization.plotter import Plotter
-
 if __name__ == "__main__":
+    Settings()
     MetricsRegistry()
+    Settings().load_config_file()
 
     system_monitor = SystemMonitor()
     system_monitor.add_monitor(CPULoadMonitor())

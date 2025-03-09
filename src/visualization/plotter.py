@@ -4,20 +4,20 @@ import src.config as config
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
 
 from dataclasses import fields
+from matplotlib.axes import Axes
 from matplotlib.backend_bases import Event
+from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
 from matplotlib.widgets import Button
+from PIL import Image
 from src.dtypes import Metric, MetricUnit
-from src.metrics_registry import MetricsRegistry
-from src.visualization.settings_window import SettingsWindow
+from src.metrics_registry.metrics_registry import MetricsRegistry
 from src.system_monitor import SystemMonitor
-from typing import Optional, Tuple
 from src.utils import get_metric_unit_ylim, get_metric_unit_label
-from matplotlib.figure import Figure
-from matplotlib.axes import Axes
+from src.visualization.settings_window import SettingsWindow
+from typing import Optional, Tuple
 
 BACKGROUND_COLOR = "#333333"
 WHITE = "#DDDDDD"
@@ -88,7 +88,7 @@ class Plotter:
         i: int = 0
         for f in fields(system_metrics):
             attr: Metric = getattr(system_metrics, f.name)
-            if attr.display:
+            if attr.config.display:
                 data = attr.data
                 fill_length = config.NUM_DATA_POINTS - len(data)
                 data += [np.nan] * fill_length
