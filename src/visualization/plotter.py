@@ -12,10 +12,18 @@ from src.metrics_registry import MetricsRegistry
 from src.visualization.settings_window import SettingsWindow
 from src.system_monitor import SystemMonitor
 from typing import Optional
-from utils import get_metric_unit_ylim
+from utils import get_metric_unit_ylim, get_metric_unit_label
 
 BACKGROUND_COLOR = "#333333"
 WHITE = "#DDDDDD"
+
+
+def make_xticks(num_ticks: int):
+    ticks = np.linspace(0, config.NUM_DATA_POINTS, num_ticks)
+    labels = [int((config.NUM_DATA_POINTS - t) * config.PLOT_INTERVAL_S)
+              for t in ticks]
+
+    return ticks, labels
 
 
 class Plotter:
@@ -34,6 +42,16 @@ class Plotter:
             self._axes[i].set_xlim(0, config.NUM_DATA_POINTS)
             self._axes[i].set_ylim(0, get_metric_unit_ylim(MetricUnit(i + 1)))
             self._axes[i].grid(axis="y", color=WHITE, zorder=0, alpha=0.5)
+            self._axes[i].tick_params(axis="both", colors=WHITE)
+            self._axes[i].set_ylabel(get_metric_unit_label(
+                MetricUnit(i + 1)), color=WHITE)
+
+            if i == self._num_unit_types - 1:
+                self._axes[i].set_xlabel("s", color=WHITE)
+                self._axes[i].set_xticks(*make_xticks(11))
+            else:
+                # self._axes[i].set_xlabel()
+                self._axes[i].set_xticks([])
 
             for spine in self._axes[i].spines.values():
                 spine.set_color(WHITE)
@@ -42,7 +60,7 @@ class Plotter:
         self._x_data = np.arange(0, config.NUM_DATA_POINTS)
 
         self._settings_window: Optional[SettingsWindow] = None
-        self._add_settings_button()
+        # self._add_settings_button()
 
         self.animation = animation.FuncAnimation(
             self._fig, self._update_data, interval=config.PLOT_INTERVAL_S, blit=True
@@ -80,8 +98,8 @@ class Plotter:
         return labels
 
     def _add_settings_button(self):
-        settings_ax = plt.axes((0.85, 0.01, 0.1, 0.05))
-        self._settings_button = Button(settings_ax, "Settings")
+        settings_ax = plt.axes((0.925, 0.925, 0.05, 0.05))
+        self._settings_button = Button(settings_ax, "Config")
         self._settings_button.on_clicked(self._handle_click_settings)
 
     def _handle_click_settings(self, _: Event):
@@ -94,10 +112,10 @@ class Plotter:
             self._settings_window.hide()
 
     def show(self) -> None:
-        plt.title("System Metrics")
         labels = self._get_labels()
         for i in range(self._num_unit_types):
             self._axes[i].legend(labels[i], loc="upper left")
+        plt.tight_layout()
         plt.show()
 
     def close(self) -> None:
