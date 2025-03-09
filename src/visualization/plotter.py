@@ -26,7 +26,7 @@ GEAR_ICON_PATH = "assets/gear.png"
 
 def make_xticks(num_ticks: int) -> Tuple[list[float], list[str]]:
     ticks = list(np.linspace(0, Config().NUM_DATA_POINTS, num_ticks).astype(float))
-    labels = [str(int((Config().NUM_DATA_POINTS - t)) * Config().PLOT_INTERVAL_S) for t in ticks]
+    labels = [str(int((Config().NUM_DATA_POINTS - t)) * Config().INTERVAL_S) for t in ticks]
 
     return ticks, labels
 
@@ -73,7 +73,7 @@ class Plotter:
         self._add_settings_button()
 
         self.animation = animation.FuncAnimation(
-            self._fig, self._update_data, interval=Config().PLOT_INTERVAL_S, blit=True
+            self._fig, self._update_data, interval=Config().INTERVAL_S, blit=True
         )
 
     def _init_plot_lines(self) -> None:

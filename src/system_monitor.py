@@ -9,7 +9,7 @@ from typing import Optional
 
 class SystemMonitor:
     def __init__(self) -> None:
-        self.refresh_interval_s: float = Config().DATA_COLLECTION_INTERVAL_S
+        self.refresh_interval_s: float = Config().INTERVAL_S
         self._running: bool = False
         self._thread: Optional[Thread] = None
         self._monitors: list[BaseMonitor] = []

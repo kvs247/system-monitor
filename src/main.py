@@ -9,7 +9,7 @@ from src.visualization.plotter import Plotter
 if __name__ == "__main__":
     config_data = Config().read_config_file()
     if config_data:
-        MetricsRegistry().update_config(config_data)
+        MetricsRegistry().update_config(config_data.metrics)
 
     system_monitor = SystemMonitor()
     system_monitor.add_monitor(CPULoadMonitor())

@@ -1,21 +1,28 @@
 import os
 import json
 
-from typing import Any, Optional, Dict
+from dataclasses import dataclass
 from dataclasses import fields, asdict
 from src.dtypes import Metric, MetricConfig, SystemMetrics
+from typing import Any, Optional, Dict
 
 HOME = os.path.expanduser("~")
 SYSTEM_MONITOR_DIR = os.path.join(HOME, ".config/system-monitor")
 CONFIG_FILE_PATH_UNIX = os.path.join(SYSTEM_MONITOR_DIR, "settings.json")
 
 
+@dataclass
+class ConfigFile:
+    num_data_points: int
+    interval_s: int
+    metrics: Dict[str, MetricConfig]
+
+
 class Config:
     _instance = None
 
     NUM_DATA_POINTS: int = 600
-    PLOT_INTERVAL_S: float = 1.0
-    DATA_COLLECTION_INTERVAL_S: float = 1.0
+    INTERVAL_S: float = 1.0
 
     def __new__(cls) -> "Config":
         if cls._instance is None:
@@ -43,15 +50,19 @@ class Config:
         if not self._config_dir_exists():
             self._create_config_dir()
 
-        config_file_json: Dict[str, Dict[str, Any]] = {}
+        config_file_json: Dict[str, Any] = {}
+        config_file_json["num_data_points"] = self.NUM_DATA_POINTS
+        config_file_json["interval_s"] = self.INTERVAL_S
+
+        config_file_json["metrics"] = {}
         for f in fields(system_metrics):
             metric: Metric = getattr(system_metrics, f.name)
-            config_file_json[f.name] = asdict(metric.config)
+            config_file_json["metrics"][f.name] = asdict(metric.config)
 
         with open(CONFIG_FILE_PATH_UNIX, "w") as f:
             f.write(json.dumps(config_file_json, indent=2))
 
-    def read_config_file(self) -> Optional[Dict[str, MetricConfig]]:
+    def read_config_file(self) -> Optional[ConfigFile]:
         if not self._config_file_exists():
             return None
 
@@ -62,8 +73,20 @@ class Config:
         if len(config_file_json) == 0:
             return None
 
-        config_data: Dict[str, MetricConfig] = {}
-        for metric_name, metric_config in config_file_json.items():
-            config_data[metric_name] = MetricConfig(color=metric_config["color"], display=metric_config["display"])
+        print("HERE", config_file_json)
 
-        return config_data
+        config_file = ConfigFile(
+            num_data_points=config_file_json["num_data_points"],
+            interval_s=config_file_json["interval_s"],
+            metrics={},
+        )
+
+        metrics_config_data: Dict[str, MetricConfig] = {}
+        for metric_name, metric_config in config_file_json["metrics"].items():
+            metrics_config_data[metric_name] = MetricConfig(
+                color=metric_config["color"],
+                display=metric_config["display"],
+            )
+        config_file.metrics = metrics_config_data
+
+        return config_file
