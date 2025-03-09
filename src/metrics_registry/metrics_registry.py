@@ -1,5 +1,6 @@
-from src.dtypes import SystemMetrics
+from src.dtypes import SystemMetrics, MetricConfig, Metric
 from src.metrics_registry.default_metrics_registry import make_default_metrics_registry
+from typing import Dict
 
 
 class MetricsRegistry:
@@ -16,3 +17,8 @@ class MetricsRegistry:
 
     def get_system_metrics(self) -> SystemMetrics:
         return self._system_metrics
+
+    def update_config(self, config_data: Dict[str, MetricConfig]) -> None:
+        for metric_name, metric_config in config_data.items():
+            metric: Metric = getattr(self._system_metrics, metric_name)
+            setattr(metric, "config", metric_config)

@@ -2,10 +2,10 @@ import tkinter as tk
 
 from dataclasses import fields
 from matplotlib.lines import Line2D
+from src.config import Config
 from src.dtypes import Metric
 from src.metrics_registry.metrics_registry import MetricsRegistry
 from typing import Callable
-from src.settings import Settings
 
 
 class SettingsWindow:
@@ -50,7 +50,7 @@ class SettingsWindow:
         return lambda: self.change_field_active(metric)
 
     def _save_button_callback(self):
-        return lambda: Settings().write_config_file()
+        return lambda: Config().write_config_file(MetricsRegistry().get_system_metrics())
 
     def show(self) -> None:
         self._hidden = False

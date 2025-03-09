@@ -1,6 +1,6 @@
 # pyright: reportUnknownMemberType=false
 
-import src.config as config
+from src.config import Config
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
@@ -25,8 +25,8 @@ GEAR_ICON_PATH = "assets/gear.png"
 
 
 def make_xticks(num_ticks: int) -> Tuple[list[float], list[str]]:
-    ticks = list(np.linspace(0, config.NUM_DATA_POINTS, num_ticks).astype(float))
-    labels = [str(int((config.NUM_DATA_POINTS - t)) * config.PLOT_INTERVAL_S) for t in ticks]
+    ticks = list(np.linspace(0, Config().NUM_DATA_POINTS, num_ticks).astype(float))
+    labels = [str(int((Config().NUM_DATA_POINTS - t)) * Config().PLOT_INTERVAL_S) for t in ticks]
 
     return ticks, labels
 
@@ -46,7 +46,7 @@ class Plotter:
 
         for i in range(self._num_unit_types):
             self._axes[i].set_facecolor(BACKGROUND_COLOR)
-            self._axes[i].set_xlim(0, config.NUM_DATA_POINTS)
+            self._axes[i].set_xlim(0, Config().NUM_DATA_POINTS)
             self._axes[i].set_ylim(0, get_metric_unit_ylim(MetricUnit(i + 1)))
             self._axes[i].grid(axis="y", color=WHITE, zorder=0, alpha=0.5)
             self._axes[i].tick_params(axis="both", colors=WHITE)
@@ -67,13 +67,13 @@ class Plotter:
                 spine.set_color(WHITE)
                 spine.set_zorder(0)
 
-        self._x_data = np.arange(0, config.NUM_DATA_POINTS)
+        self._x_data = np.arange(0, Config().NUM_DATA_POINTS)
 
         self._settings_window: Optional[SettingsWindow] = None
         self._add_settings_button()
 
         self.animation = animation.FuncAnimation(
-            self._fig, self._update_data, interval=config.PLOT_INTERVAL_S, blit=True
+            self._fig, self._update_data, interval=Config().PLOT_INTERVAL_S, blit=True
         )
 
     def _init_plot_lines(self) -> None:
@@ -90,7 +90,7 @@ class Plotter:
             attr: Metric = getattr(system_metrics, f.name)
             if attr.config.display:
                 data = attr.data
-                fill_length = config.NUM_DATA_POINTS - len(data)
+                fill_length = Config().NUM_DATA_POINTS - len(data)
                 data += [np.nan] * fill_length
                 self._lines[i].set_data(self._x_data, data)
             else:

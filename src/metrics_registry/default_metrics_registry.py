@@ -1,12 +1,12 @@
+from src.config import Config
 import numpy as np
-import src.config as config
 
 from collections import deque
 from src.dtypes import Metric, MetricConfig, MetricUnit, HardwareComponent, SystemMetrics
 
 
 def make_empty_deque() -> deque[float]:
-    return deque([np.nan] * config.NUM_DATA_POINTS, maxlen=config.NUM_DATA_POINTS)
+    return deque([np.nan] * Config().NUM_DATA_POINTS, maxlen=Config().NUM_DATA_POINTS)
 
 
 def make_default_metrics_registry():
