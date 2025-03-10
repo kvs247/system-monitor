@@ -1,8 +1,7 @@
 import os
 import json
 
-from dataclasses import dataclass
-from dataclasses import fields, asdict
+from dataclasses import dataclass, fields, asdict
 from src.dtypes import Metric, MetricConfig, SystemMetrics
 from typing import Any, Optional, Dict
 
@@ -55,9 +54,9 @@ class Config:
         config_file_json["interval_s"] = self.INTERVAL_S
 
         config_file_json["metrics"] = {}
-        for f in fields(system_metrics):
-            metric: Metric = getattr(system_metrics, f.name)
-            config_file_json["metrics"][f.name] = asdict(metric.config)
+        for fld in fields(system_metrics):
+            metric: Metric = getattr(system_metrics, fld.name)
+            config_file_json["metrics"][fld.name] = asdict(metric.config)
 
         with open(CONFIG_FILE_PATH_UNIX, "w") as f:
             f.write(json.dumps(config_file_json, indent=2))

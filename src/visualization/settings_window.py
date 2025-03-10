@@ -9,7 +9,7 @@ from typing import Callable
 
 
 class SettingsWindow:
-    def __init__(self, plot_lines: list[Line2D]):
+    def __init__(self, plot_lines: list[Line2D]) -> None:
         self._root = tk.Tk()
         self._root.title("Settings")
         self._root.minsize(200, 200)
@@ -49,7 +49,7 @@ class SettingsWindow:
     def _check_button_callback(self, metric: Metric) -> Callable[[], None]:
         return lambda: self.change_field_active(metric)
 
-    def _save_button_callback(self):
+    def _save_button_callback(self) -> Callable[[], None]:
         return lambda: Config().write_config_file(MetricsRegistry().get_system_metrics())
 
     def show(self) -> None:

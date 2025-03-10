@@ -9,7 +9,7 @@ def make_empty_deque() -> deque[float]:
     return deque([np.nan] * Config().NUM_DATA_POINTS, maxlen=Config().NUM_DATA_POINTS)
 
 
-def make_default_metrics_registry():
+def make_default_metrics_registry() -> SystemMetrics:
     return (
         SystemMetrics(
             # CPU
