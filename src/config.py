@@ -31,7 +31,7 @@ class Config:
 
     def _initialize(self) -> None:
         if not os.path.exists(CONFIG_FILE_PATH_UNIX):
-            print("does not exist")
+            print("config file does not exist")
         pass
 
     def _config_dir_exists(self) -> bool:
@@ -71,8 +71,6 @@ class Config:
 
         if len(config_file_json) == 0:
             return None
-
-        print("HERE", config_file_json)
 
         config_file = ConfigFile(
             num_data_points=config_file_json["num_data_points"],
